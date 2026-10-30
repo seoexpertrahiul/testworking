@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Social Demo</title>
+
+<style>
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f0f2f5;
+  min-height: 100vh;
+}
+
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  padding: 20px;
+}
+
+.left {
+  max-width: 420px;
+}
+
+.logo {
+  color: #1877f2;
+  font-size: 48px;
+  font-weight: bold;
+  margin-bottom: 12px;
+}
+
+.left p {
+  font-size: 23px;
+  color: #1c1e21;
+  line-height: 1.4;
+}
+
+.card {
+  width: 396px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.12);
+}
+
+.notice {
+  background: #e7f3ff;
+  color: #174a80;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 15px;
+}
+
+input {
+  width: 100%;
+  padding: 14px;
+  margin-bottom: 12px;
+  border: 1px solid #dddfe2;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+input:focus {
+  outline: none;
+  border-color: #1877f2;
+}
+
+.login {
+  width: 100%;
+  padding: 13px;
+  background: #1877f2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.login:hover {
+  background: #166fe5;
+}
+
+.login:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 14px;
+  color: #333;
+  overflow-wrap: anywhere;
+}
+
+@media(max-width: 768px) {
+
+  .container {
+    flex-direction: column;
+    gap: 25px;
+    text-align: center;
+  }
+
+  .logo {
+    font-size: 40px;
+  }
+
+  .left p {
+    font-size: 19px;
+  }
+
+  .card {
+    width: 100%;
+    max-width: 396px;
+  }
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <div class="left">
+
+    <div class="logo">Social Demo</div>
+
+    <p>
+      এটি HTML, CSS ও JavaScript শেখার
+      জন্য তৈরি একটি পরীক্ষামূলক ওয়েব ফর্ম।
+    </p>
+
+  </div>
+
+
+  <div class="card">
+
+    <div class="notice">
+      এটি একটি শিক্ষামূলক ডেমো।
+      এখানে শুধু কাল্পনিক তথ্য ব্যবহার করুন।
+    </div>
+
+    <form id="demoForm">
+
+      <input
+        type="text"
+        name="name"
+        placeholder="কাল্পনিক নাম"
+        maxlength="60"
+        required
+      >
+
+      <input
+        type="email"
+        name="email"
+        placeholder="পরীক্ষামূলক ইমেইল"
+        maxlength="120"
+        required
+      >
+
+      <input
+        type="text"
+        name="note"
+        placeholder="মন্তব্য (ঐচ্ছিক)"
+        maxlength="200"
+      >
+
+      <button class="login" type="submit">
+        ডেমো তথ্য পাঠাও
+      </button>
+
+    </form>
+
+    <p id="status" class="status"></p>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/********** APPS SCRIPT CONNECTION **********/
+
+// শুধু এই লিংকটি পরিবর্তন করবে
+
+const scriptURL =
+"https://script.google.com/macros/s/AKfycbytSGynLJMPPqF57tIjtAwKOnX81GWspo4nBq1QYzZZuDfaLzn_NzM5bAcUhEZrxdxejA/exec";
+
+
+/********** FORM SUBMISSION **********/
+
+const form = document.getElementById("demoForm");
+
+const status = document.getElementById("status");
+
+form.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+  const button = form.querySelector("button");
+
+  button.disabled = true;
+
+  status.textContent = "তথ্য পাঠানো হচ্ছে...";
+
+  try {
+
+    const formData = new FormData(form);
+
+    const data = new URLSearchParams();
+
+    for (const [key, value] of formData.entries()) {
+      data.append(key, value);
+    }
+
+    await fetch(scriptURL, {
+      method: "POST",
+      mode: "no-cors",
+      body: data
+    });
+
+    status.textContent =
+      "অনুরোধ পাঠানো হয়েছে। Google Sheet-এ যাচাই করুন।";
+
+    form.reset();
+
+  }
+
+  catch(error) {
+
+    status.textContent =
+      "অনুরোধ পাঠানো যায়নি। URL ও ইন্টারনেট যাচাই করুন।";
+
+  }
+
+  finally {
+
+    button.disabled = false;
+
+  }
+
+});
+
+</script>
+
+</body>
+</html>
